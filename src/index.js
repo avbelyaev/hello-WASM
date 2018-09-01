@@ -1,4 +1,4 @@
-let fib;
+let fib, sum;
 
 const loadWebAssembly = (fileName) => {
     return fetch(fileName)
@@ -11,6 +11,12 @@ const loadWebAssembly = (fileName) => {
 
 loadWebAssembly('src/fib.wasm')
     .then(instance => {
-        fib = instance.exports._Z5w_fibi; // name from fib.wat
-        console.log('WASM fib ready');
+        fib = instance.exports._Z5w_fibi; // name from wat
+        console.log(`WASM fib ready and working: fib(10) -> ${fib(10)}`);
+    });
+
+loadWebAssembly('src/sum.wasm')
+    .then(instance => {
+        sum = instance.exports._Z3sumPii;
+        console.log('WASM sum ready');
     });
