@@ -2,8 +2,8 @@
  (table 0 anyfunc)
  (memory $0 1)
  (export "memory" (memory $0))
- (export "_Z5w_fibi" (func $_Z5w_fibi))
- (func $_Z5w_fibi (; 0 ;) (param $0 i32) (result i32)
+ (export "fib" (func $fib))
+ (func $fib (; 0 ;) (param $0 i32) (result i32)
   (block $label$0
    (block $label$1
     (br_if $label$1
@@ -26,13 +26,13 @@
    )
   )
   (i32.add
-   (call $_Z5w_fibi
+   (call $fib
     (i32.add
      (get_local $0)
      (i32.const -1)
     )
    )
-   (call $_Z5w_fibi
+   (call $fib
     (i32.add
      (get_local $0)
      (i32.const -2)

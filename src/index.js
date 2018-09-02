@@ -11,7 +11,7 @@ const loadWebAssembly = (fileName) => {
 
 loadWebAssembly('src/fib.wasm')
     .then(instance => {
-        fib = instance.exports._Z5w_fibi; // name from wat
+        fib = instance.exports.fib; // name from wat
         console.log(`WASM fib ready and working: fib(10) -> ${fib(10)}`);
     });
 
