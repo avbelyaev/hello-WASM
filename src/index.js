@@ -1,22 +1,33 @@
 let fib, sum;
 
-const loadWebAssembly = (fileName) => {
+const loadAndCompile = (fileName) => {
     return fetch(fileName)
         .then(response => response.arrayBuffer())
-        .then(bytes => WebAssembly.compile(bytes))
-        .then(module => {
-            return new WebAssembly.Instance(module)
-        });
+        .then(bytes => WebAssembly.compile(bytes));
 };
 
-loadWebAssembly('src/fib.wasm')
+loadAndCompile('src/fib.wasm')
+    .then(module => new WebAssembly.Instance(module))
     .then(instance => {
         fib = instance.exports.fib; // name from wat
-        console.log(`WASM fib ready and working: fib(10) -> ${fib(10)}`);
+        console.log(`WASM fib up & running: fib(10) -> ${fib(10)}`);
     });
 
-loadWebAssembly('src/sum.wasm')
+loadAndCompile('src/mem.wasm')
+    .then(module => {
+        // memory unit = 64Kb page
+        const memory = new WebAssembly.Memory({ initial: 10, maximum: 100 });
+        const i32 = new Uint32Array(memory.buffer);
+        i32[0] = 1337;
+
+        const obj = {
+            exports: {
+                memory: memory
+            }
+        };
+        return new WebAssembly.Instance(module, obj);
+    })
     .then(instance => {
-        sum = instance.exports._Z3sumPii;
+        sum = instance.exports.mem();
         console.log('WASM sum ready');
     });
